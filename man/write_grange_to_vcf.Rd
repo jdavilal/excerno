@@ -14,3 +14,37 @@ write_grange_to_vcf(grange, file.name)
 \description{
 Write a GRange to a vcf file
 }
+\examples{
+
+set.seed(10)
+
+# Load in signatures
+cosmic.sigs <- get_known_signatures()
+cosmic.sig4 <- as.matrix(cosmic.sigs[,4])
+ffpe.sig <- get_ffpe_signature()
+
+# Create samples
+sample.sig4 <- create_signature_sample_vector(cosmic.sig4, 100)
+sample.ffpe <- create_signature_sample_vector(ffpe.sig, 100)
+
+# Create classification data frame
+samples <- list(sample.sig4, sample.ffpe)
+signatures <- list(cosmic.sig4, ffpe.sig)
+classify.df <- classify_simulated_samples(samples, signatures)
+
+seq <- getSeq(Hsapiens, "chr1")
+
+set.seed(10)
+info <- sample("SOMATIC", 200, replace = TRUE)
+quality <- sample(50:100, 200, replace = TRUE)
+filter <- sample("PASS", 200, replace = TRUE)
+format <- sample("GT:GQ", 200, replace = TRUE)
+samples <- list(sample(paste("0/0:", 1:100, sep = ""), 200, replace = TRUE), sample(paste("0/0:", 1:100, sep = ""), 200, replace = TRUE))
+sample.names <- c("SAMPLE1", "SAMPLE2")
+set.seed(10)
+classify.gr <- create_gr_from_sample(classify.df, seq, "chr1", info, quality, filter, format, samples, sample.names)
+
+# Funtion usage
+file.name <- "new_file.vcf"
+write_grange_to_vcf(classify.gr, file.name)
+}

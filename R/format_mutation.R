@@ -1,4 +1,17 @@
-
+#' Format mutation
+#'
+#' Determine the string format of a position in a genomic sequence
+#'
+#' @param position The position of the mutation.
+#' @param sequence The genomic sequence of type DNAString.
+#' @param alternate The alternate base of type character. If left empty, format_mutation() will output only the nucleotide base with its surrounding bases.
+#' @return A string of the mutation in a certain format
+#' @examples
+#'
+#' # Load in the sequence
+#' seq <- getSeq(Hsapiens, "chr1")
+#' format_mutation(20124, seq, "A")
+#' @export
 format_mutation <- function(position, sequence, alternate = "") {
 
   # Argument validation
