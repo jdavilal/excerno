@@ -29,9 +29,9 @@ test_that("Output is correct", {
     filter(mutations == "A[C>T]A") %>%
     head(1)
 
-  expect_equal(mut.row$truth, "SBS4")
+  expect_equal(mut.row$truth, "FFPE")
   expect_equal(round(mut.row$SBS4, 2), 0.11)
   expect_equal(round(mut.row$FFPE, 2), 0.89)
   expect_equal(mut.row$classify, "FFPE")
-  expect_equal(mut.row$misclassification, 1)
+  expect_equal(mut.row$misclassification, 0)
 })

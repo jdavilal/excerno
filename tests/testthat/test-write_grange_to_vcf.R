@@ -18,14 +18,12 @@ classify.df <- classify_simulated_samples(samples, signatures)
 
 seq <- getSeq(Hsapiens, "chr1")
 
-set.seed(10)
 info <- sample("SOMATIC", 200, replace = TRUE)
 quality <- sample(50:100, 200, replace = TRUE)
 filter <- sample("PASS", 200, replace = TRUE)
 format <- sample("GT:GQ", 200, replace = TRUE)
 samples <- list(sample(paste("0/0:", 1:100, sep = ""), 200, replace = TRUE), sample(paste("0/0:", 1:100, sep = ""), 200, replace = TRUE))
 sample.names <- c("SAMPLE1", "SAMPLE2")
-set.seed(10)
 classify.gr <- create_gr_from_sample(classify.df, seq, "chr1", info, quality, filter, format, samples, sample.names)
 
 test_that("Arguments are valid", {
@@ -48,15 +46,15 @@ test_that("Written files are correct", {
 
   # Check values in vcf file
   expect_true(vcf.fix$CHROM[1] == 1)
-  expect_true(vcf.fix$POS[1] == 10553)
-  expect_true(vcf.fix$REF[1] == "C")
+  expect_true(vcf.fix$POS[1] == 11332)
+  expect_true(vcf.fix$REF[1] == "T")
   expect_true(vcf.fix$ALT[1] == "A")
   expect_true(vcf.fix$INFO[1] == "SOMATIC;TRUTH=SBS4")
-  expect_true(vcf.fix$QUAL[1] == 78)
+  expect_true(vcf.fix$QUAL[1] == 85)
   expect_true(vcf.fix$FILTER[1] == "PASS")
   expect_true(vcf.gt$FORMAT[1] == "GT:GQ")
-  expect_true(vcf.gt$SAMPLE1[1] == "0/0:90")
-  expect_true(vcf.gt$SAMPLE2[1] == "0/0:13")
+  expect_true(vcf.gt$SAMPLE1[1] == "0/0:70")
+  expect_true(vcf.gt$SAMPLE2[1] == "0/0:56")
 
   # Delete recently created file
   file.remove(file.name)

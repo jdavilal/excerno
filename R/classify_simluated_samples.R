@@ -156,6 +156,8 @@ classify_simulated_samples <- function(samples, signatures, signature.names = c(
     # Mutations that don't appear in a signature are evaluated as NA in posteriors & classification
     drop_na()
 
+  df.final <- df.final[sample(nrow(df.final)),]
+
   return (df.final)
 
 }
