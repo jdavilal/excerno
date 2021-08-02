@@ -1,8 +1,31 @@
-
-get_mutational_vector <- function(vcf.data) {
+#' Get mutational vector
+#'
+#' Get the mutational vector from a vcf file
+#'
+#' @param vcf.data The name of the vcf file
+#' @return A vector of mutation strings
+#' @examples
+#'
+#' # Load file for testing
+#' file <- system.file("extdata", "SIMULATED_SAMPLE_SBS4_1.vcf", package = "excerno")
+#'
+#' # Load in correct output
+#' cosmic.sigs <- get_known_signatures()
+#' cosmic.sig4 <- as.matrix(cosmic.sigs[, 4])
+#' ffpe.sig <- get_ffpe_signature()
+#'
+#' sample.ffpe <- create_signature_sample_vector(ffpe.sig, 500)
+#' sample.sig4 <- create_signature_sample_vector(cosmic.sig4, 500)
+#'
+#' test.vector <- c(sample.ffpe, sample.sig4)
+#' vcf.vector <- get_mutational_vector(file)
+#' @export
+get_mutational_vector <- function(vcf.file) {
 
   # Argument validation
-  if (class(vcf.data) != "vcfR") { stop("argument vcf.data is not type vcfR") }
+  if (!is.character(vcf.file)) { stop("argument vcf.file is not type character") }
+
+  vcf.data <- read.vcfR(vcf.file)
 
   # Convert to data frames
   vcf.fix <- data.frame(vcf.data@fix)
@@ -31,12 +54,14 @@ get_mutational_vector <- function(vcf.data) {
   return (mutations)
 }
 
-get_mutational_vectors <- function(vcf.data) {
+#' @rdname get_mutational_vector
+#' @export
+get_mutational_vectors <- function(vcf.files) {
 
   sample.vectors <- list()
 
-  for (i in 1:length(vcf.data)) {
-    sample.vector <- get_mutational_vector(vcf.data[[i]])
+  for (i in 1:length(vcf.files)) {
+    sample.vector <- get_mutational_vector(vcf.files[[i]])
     sample.vectors[[i]] <- sample.vector
   }
 
