@@ -33,4 +33,11 @@ sample.sig4 <- create_signature_sample_vector(cosmic.sig4, 500)
 
 test.vector <- c(sample.ffpe, sample.sig4)
 vcf.vector <- get_mutational_vector(file)
+
+# Load files for inputing multiple vcfR objects
+vcf.files <- list.files(
+  system.file("extdata", package = "excerno"),
+  pattern = "SIMULATED_SAMPLE_SBS4_\\\\d.vcf", full.names = TRUE)
+
+sample.vectors <- get_mutational_vectors(vcf.files)
 }

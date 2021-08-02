@@ -19,6 +19,13 @@
 #'
 #' test.vector <- c(sample.ffpe, sample.sig4)
 #' vcf.vector <- get_mutational_vector(file)
+#'
+#' # Load files for inputing multiple vcfR objects
+#' vcf.files <- list.files(
+#'   system.file("extdata", package = "excerno"),
+#'   pattern = "SIMULATED_SAMPLE_SBS4_\\d.vcf", full.names = TRUE)
+#'
+#' sample.vectors <- get_mutational_vectors(vcf.files)
 #' @export
 get_mutational_vector <- function(vcf.file) {
 
