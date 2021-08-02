@@ -1,6 +1,9 @@
 
 get_mutational_vector <- function(vcf.data) {
 
+  # Argument validation
+  if (class(vcf.data) != "vcfR") { stop("argument vcf.data is not type vcfR") }
+
   # Convert to data frames
   vcf.fix <- data.frame(vcf.data@fix)
   vcf.fix$CHROM <- as.numeric(vcf.fix$CHROM)
