@@ -20,6 +20,10 @@ excerno_vcf <- function(files, artifact = c(), method = "nmf", num.signatures = 
 
   # Arguments validation
   if (!is.character(files)) { stop("argument files must be type character") }
+  if (!is.character(artifact)) { stop("argument artifact must be type character") }
+  if (method != "nmf" && method != "linear") { stop("argument method must be \"nmf\" or \"linear\"") }
+  if (method == "linear" && is.null(target.sigs)) { stop("argument target.sigs must be non-empty if method equals linear") }
+  if (method == "nmf" && length(files) < 2) { stop("argument files must be length greater than 2 if method equals nmf") }
 
   # Read vcf files
   vcf.data <- list()
@@ -31,7 +35,7 @@ excerno_vcf <- function(files, artifact = c(), method = "nmf", num.signatures = 
   }
 
   print_info("Creating mutational vectors")
-  samples <- get_mutational_vectors(vcf.data)
+  samples <- get_mutational_vectors(vcf.files)
 
   # Perform method to get present signatures and contributions of each sample
   if (method == "nmf") {
@@ -57,7 +61,7 @@ excerno_vcf <- function(files, artifact = c(), method = "nmf", num.signatures = 
 
     # NMF and renaming columns and rows
     nmf.res <- extract_signatures(sample.matrix, rank = num.signatures, nrun = 10)
-    sig.names <- find_similar_signatures(nmf.res$signatures)
+    sig.names <- find_signature_names(nmf.res$signatures)
     colnames(nmf.res$signatures) <- sig.names
     rownames(nmf.res$contribution) <- sig.names
 
@@ -109,7 +113,7 @@ excerno_vcf <- function(files, artifact = c(), method = "nmf", num.signatures = 
 
   print_info("Generating classification data frames")
   # Determine signature probabilities from each sample
-  classifications.df <- get_classifcations(signatures, contribution)
+  classifications.df <- get_classifications(signatures, contribution)
 
   print_info("Loading in values to vcf files")
   # Insert probabilities into original vcfR object
@@ -154,7 +158,7 @@ excerno_vcf <- function(files, artifact = c(), method = "nmf", num.signatures = 
     }
 
     # Writing vcf file with new info
-    vcf.file <- paste(tail(str_split(files[i], "/")[[1]], n = 1), "_classified.vcf.gz")
+    vcf.file <- paste(str_remove(tail(str_split(files[i], "/")[[1]], n = 1), ".vcf$"), "_classified.vcf.gz", sep = "")
     write.vcf(vcf.data[[i]], vcf.file)
     gunzip(vcf.file, overwrite = TRUE)
   }
