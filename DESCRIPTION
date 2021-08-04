@@ -16,7 +16,7 @@ Description: A simple approach to filtering out mutations caused by the FFPE
 Encoding: UTF-8
 LazyData: true
 Depends:
-    R ( >= 4.0.0)
+    R (>= 4.0.0)
 Imports: 
     BiocManager,
     BSgenome,
@@ -31,5 +31,9 @@ Imports:
     R.utils
 RoxygenNote: 7.1.1
 Suggests: 
+    rmarkdown,
+    knitr,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+License: MIT + file LICENSE
+VignetteBuilder: knitr

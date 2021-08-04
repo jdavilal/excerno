@@ -1,4 +1,5 @@
 library(excerno)
+library(MutationalPatterns)
 
 set.seed(10)
 

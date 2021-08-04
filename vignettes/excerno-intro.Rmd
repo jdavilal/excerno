@@ -1,0 +1,120 @@
+---
+title: "Introduction to Excerno"
+author: "Audrey Mitchell, Marco Ruiz, Soua Yang"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{excerno-intro}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+--- 
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+# library(excerno)
+```
+
+# Introduction
+
+Formalin-Fixation Paraffin-Embedding (FFPE) is a preservation technique for cancer tissue samples which introduces novel mutations. Leveraging the known mutational signature of FFPE and mutational signatures from the Catalogue of Somatic Mutations in Cancer (COSMIC) library, we set out to classify and filter FFPE artifacts. Our method utilizes non-negative matrix factorization (MutationalPatterns R package) and Bayes’ formula to calculate the probability that each mutation in a sample was caused by FFPE. Our methods are implemented in this package, excerno.
+
+```excerno``` provide functions to help classify single nucleotide variants to their possible origin signature.
+
+# Simulations
+
+## Creating simulated samples
+
+```{r eval = FALSE}
+# Load in cosmic signatures and FFPE signature
+cosmic.sigs <- get_known_signatures()
+cosmic.sig4 <- as.matrix(cosmic.sigs[,4])
+ffpe.sig <- get_ffpe_signature()
+
+sample.sig4 <- create_signature_sample_vector(cosmic.sig4, 100)
+sample.ffpe <- create_signature_sample_vector(cosmic.sig4, 100)
+```
+
+## Creating a classification data frame with simulated samples
+
+```{r eval = FALSE}
+# Load in cosmic signatures and FFPE signature
+cosmic.sigs <- get_known_signatures()
+cosmic.sig4 <- as.matrix(cosmic.sigs[,4])
+ffpe.sig <- get_ffpe_signature()
+
+# Create samples
+sample.sig4 <- create_signature_sample_vector(cosmic.sig4, 100)
+sample.ffpe <- create_signature_sample_vector(cosmic.sig4, 100)
+
+# Turn into a list for input into classify_simulated_samples()
+samples <- list(sample.sig4, sample.ffpe)
+signatures <- list(cosmic.sig4, ffpe.sig)
+
+classification.df <- classify_simulated_samples(samples, signatures)
+```
+
+## Converting a simulated classification data frame to a GRange Object
+
+```{r eval = FALSE}
+classification.gr <- create_gr_from_sample(classification.df, seq, "chr1")
+
+# Adding values to other columns
+info <- sample("SOMATIC", 200, replace = TRUE)
+quality <- sample(50:100, 200, replace = TRUE)
+filter <- sample("PASS", 200, replace = TRUE)
+format <- sample("GT:GQ", 200, replace = TRUE)
+samples <- list(sample(paste("0/0:", 1:100, sep = ""), 200, replace = TRUE), sample(paste("0/0:", 1:100, sep = ""), 200, replace = TRUE))
+sample.names <- c("SAMPLE1", "SAMPLE2")
+
+classification.gr <- data.frame(create_gr_from_sample(classify.df, seq, "chr1", info, quality, filter, format, samples, sample.names))
+```
+
+## Writing a classification data frame to a VCF file
+
+```{r eval = FALSE}
+vcf.filename <- "new_vcf.file"
+
+write_grange_to_vcf(classification.gr, vcf.filename)
+```
+
+# Using excerno_vcf() on VCF files
+
+## Inputs
+
+### VCF file
+
+```excerno_vcf``` takes VCF files as its main input source. Here is an example of loading in VCF files (included in package).
+
+```{r eval = FALSE}
+vcf.files <- list.files(system.file("extdata", package = "excerno"), pattern = "SIMULATED_SAMPLE_SBS4_\\d.vcf", full.names = TRUE)
+```
+
+
+### Artifact
+
+To use ```excerno_vcf``` an artifact signature must be inputed. The artifact must be a 
+
+### Method
+
+### Number of Signatures
+
+### Target Signatures
+
+```{r eval = FALSE}
+excerno_vcf(vcf.files, artifact, "linear", target.sigs = target.sigs)
+excerno_vcf(vcf.files, artifact, "nmf")
+```
+
+
+
+
+
+
+
+
