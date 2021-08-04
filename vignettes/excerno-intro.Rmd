@@ -27,36 +27,51 @@ Formalin-Fixation Paraffin-Embedding (FFPE) is a preservation technique for canc
 ```excerno``` provide functions to help classify single nucleotide variants to their possible origin signature.
 
 # Simulations
+We tested the performance of our method by simulating mutations to match particular distributions and running a modified version of our classifier function that allows for the comparison of the true source of simulated mutations and the source predicted by our method. Functions for simulating mutations and classifying simulated mutations are included in the package.
 
 ## Creating simulated samples
 
+Load the mutational signatures from COSMIC version 3 using MutationalPatterns.
 ```{r eval = FALSE}
-# Load in cosmic signatures and FFPE signature
+library(MutationalPatterns)
 cosmic.sigs <- get_known_signatures()
-cosmic.sig4 <- as.matrix(cosmic.sigs[,4])
-ffpe.sig <- get_ffpe_signature()
+```
 
+Extract COSMIC Signature 4 from the matrix of all COSMIC mutations. Create a vector of the 96 single base substitution mutation types using get_mutation_types and assign to the rownames of the Signature 4 matrix for compatibility with MutationalPatterns plotting functions. Use plot_96_profile from MutationalPatterns to visualize the distribution of Signature 4.
+```{r}
+cosmic.sig4 <- as.matrix(cosmic.sigs[,4])
+mutations <- get_mutation_types()
+rownames(cosmic.sig4) <- mutations
+plot_96_profile(cosmic.sig4)
+```
+
+Load the FFPE Signature using get_ffpe_signature.
+```{r eval = FALSE}
+ffpe.sig <- get_ffpe_signature()
+```
+
+Create vectors of 100 mutations matching the distributions of COSMIC Signature 4 and the FFPE Signature using create_signature_sample_vector.
+```{r}
 sample.sig4 <- create_signature_sample_vector(cosmic.sig4, 100)
-sample.ffpe <- create_signature_sample_vector(cosmic.sig4, 100)
+sample.ffpe <- create_signature_sample_vector(ffpe.sig, 100)
+```
+
+Use signature_cosine_similarity to calculate the cosine similarity between the simulated vectors above and the original signatures.
+```{r}
+signature_cosine_similarity(sample.sig4, cosmic.sig4)
+signature_cosine_similarity(sample.ffpe, ffpe.sig)
 ```
 
 ## Creating a classification data frame with simulated samples
 
+Combine the Signature 4 and FFPE sample vectors and run the Bayesian classifyer on the combined sample using classify_simulated_samples.
 ```{r eval = FALSE}
-# Load in cosmic signatures and FFPE signature
-cosmic.sigs <- get_known_signatures()
-cosmic.sig4 <- as.matrix(cosmic.sigs[,4])
-ffpe.sig <- get_ffpe_signature()
-
-# Create samples
-sample.sig4 <- create_signature_sample_vector(cosmic.sig4, 100)
-sample.ffpe <- create_signature_sample_vector(cosmic.sig4, 100)
-
 # Turn into a list for input into classify_simulated_samples()
 samples <- list(sample.sig4, sample.ffpe)
 signatures <- list(cosmic.sig4, ffpe.sig)
 
 classification.df <- classify_simulated_samples(samples, signatures)
+classification.df
 ```
 
 ## Converting a simulated classification data frame to a GRange Object
