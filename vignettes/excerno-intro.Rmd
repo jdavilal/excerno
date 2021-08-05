@@ -90,6 +90,7 @@ The function ```create_gr_from_sample``` converts a classification data frame in
 The output GRange object is meant to parallel a VCF file so additional columns are created in the GRange object: info, quality, filter, format, and samples (if provided values). These parameters are optional and will remain as NA if no values are provided. 
 
 ```{r eval = FALSE}
+seq <- getSeq(Hsapiens, "chr1")
 classification.gr <- create_gr_from_sample(classification.df, seq, "chr1")
 
 # Adding values to other columns
@@ -100,7 +101,7 @@ format <- sample("GT:GQ", 200, replace = TRUE)
 samples <- list(sample(paste("0/0:", 1:100, sep = ""), 200, replace = TRUE), sample(paste("0/0:", 1:100, sep = ""), 200, replace = TRUE))
 sample.names <- c("SAMPLE1", "SAMPLE2")
 
-classification.gr <- data.frame(create_gr_from_sample(classify.df, seq, "chr1", info, quality, filter, format, samples, sample.names))
+classification.gr <- create_gr_from_sample(classification.df, seq, "chr1", info, quality, filter, format, samples, sample.names)
 ```
 
 ## Writing a classification data frame to a VCF file
@@ -234,3 +235,98 @@ file <- system.file("extdata", "SIMULATED_SAMPLE_SBS4_1.vcf", package = "excerno
 vcf.vector <- get_mutational_vector(file)
 ```
 
+# Data
+
+Code for generating the samples included with this package.
+
+## SAMPLE 1: FFPE at 50% with 1000 mutations
+
+```{r}
+set.seed(10)
+sample.ffpe <- create_signature_sample_vector(ffpe.sig, 500)
+sample.sig4 <- create_signature_sample_vector(cosmic.sig4, 500)
+
+samples <- list(sample.sig4, sample.ffpe)
+signatures <- list(cosmic.sig4, ffpe.sig)
+classify.df <- classify_simulated_samples(samples, signatures)
+
+info <- sample("SOMATIC", 1000, replace = TRUE)
+quality <- sample(50:100, 1000, replace = TRUE)
+filter <- sample("PASS", 1000, replace = TRUE)
+format <- sample("GT:GQ", 1000, replace = TRUE)
+samples <- list(sample(paste("0/0:", 1:100, sep = ""), 1000, replace = TRUE), sample(paste("0/0:", 1:100, sep = ""), 1000, replace = TRUE))
+sample.names <- c("SAMPLE1", "SAMPLE2")
+classify.gr <- create_gr_from_sample(classify.df, seq, "chr1", info, quality, filter, format, samples, sample.names)
+
+file.name <- "SIMULATED_SAMPLE_SBS4_1.vcf"
+write_grange_to_vcf(classify.gr, file.name)
+```
+
+## SAMPLE 2: FFPE at 80% with 1000 mutations
+
+```{r}
+set.seed(20)
+sample.ffpe <- create_signature_sample_vector(ffpe.sig, 800)
+sample.sig4 <- create_signature_sample_vector(cosmic.sig4, 200)
+
+samples <- list(sample.sig4, sample.ffpe)
+signatures <- list(cosmic.sig4, ffpe.sig)
+classify.df <- classify_simulated_samples(samples, signatures)
+
+info <- sample("SOMATIC", 1000, replace = TRUE)
+quality <- sample(50:100, 1000, replace = TRUE)
+filter <- sample("PASS", 1000, replace = TRUE)
+format <- sample("GT:GQ", 1000, replace = TRUE)
+samples <- list(sample(paste("0/0:", 1:100, sep = ""), 1000, replace = TRUE), sample(paste("0/0:", 1:100, sep = ""), 1000, replace = TRUE))
+sample.names <- c("SAMPLE1", "SAMPLE2")
+classify.gr <- create_gr_from_sample(classify.df, seq, "chr1", info, quality, filter, format, samples, sample.names)
+
+file.name <- "SIMULATED_SAMPLE_SBS4_2.vcf"
+write_grange_to_vcf(classify.gr, file.name)
+```
+
+## SAMPLE 3: FFPE at 40% with 1000 mutations
+
+```{r}
+set.seed(30)
+sample.ffpe <- create_signature_sample_vector(ffpe.sig, 400)
+sample.sig4 <- create_signature_sample_vector(cosmic.sig4, 600)
+
+samples <- list(sample.sig4, sample.ffpe)
+signatures <- list(cosmic.sig4, ffpe.sig)
+classify.df <- classify_simulated_samples(samples, signatures)
+
+info <- sample("SOMATIC", 1000, replace = TRUE)
+quality <- sample(50:100, 1000, replace = TRUE)
+filter <- sample("PASS", 1000, replace = TRUE)
+format <- sample("GT:GQ", 1000, replace = TRUE)
+samples <- list(sample(paste("0/0:", 1:100, sep = ""), 1000, replace = TRUE), sample(paste("0/0:", 1:100, sep = ""), 1000, replace = TRUE))
+sample.names <- c("SAMPLE1", "SAMPLE2")
+classify.gr <- create_gr_from_sample(classify.df, seq, "chr1", info, quality, filter, format, samples, sample.names)
+
+file.name <- "SIMULATED_SAMPLE_SBS4_3.vcf"
+write_grange_to_vcf(classify.gr, file.name)
+```
+
+## SAMPLE 4: FFPE at 10% with 1000 mutations
+
+```{r}
+set.seed(40)
+sample.ffpe <- create_signature_sample_vector(ffpe.sig, 100)
+sample.sig4 <- create_signature_sample_vector(cosmic.sig4, 900)
+
+samples <- list(sample.sig4, sample.ffpe)
+signatures <- list(cosmic.sig4, ffpe.sig)
+classify.df <- classify_simulated_samples(samples, signatures)
+
+info <- sample("SOMATIC", 1000, replace = TRUE)
+quality <- sample(50:100, 1000, replace = TRUE)
+filter <- sample("PASS", 1000, replace = TRUE)
+format <- sample("GT:GQ", 1000, replace = TRUE)
+samples <- list(sample(paste("0/0:", 1:100, sep = ""), 1000, replace = TRUE), sample(paste("0/0:", 1:100, sep = ""), 1000, replace = TRUE))
+sample.names <- c("SAMPLE1", "SAMPLE2")
+classify.gr <- create_gr_from_sample(classify.df, seq, "chr1", info, quality, filter, format, samples, sample.names)
+
+file.name <- "SIMULATED_SAMPLE_SBS4_4.vcf"
+write_grange_to_vcf(classify.gr, file.name)
+```
