@@ -129,7 +129,7 @@ vcf.files <- list.files(system.file("extdata", package = "excerno"), pattern = "
 
 ### Method
 
-```excerno_vcf``` offers two methods for calculating the contribution of signatures in a sample.
+```excerno_vcf``` offers two methods for calculating the contribution of signatures in a sample: "nmf" or "linear." For each method, there are different input requirements.
 
 ### Number of Signatures
 
@@ -149,8 +149,88 @@ colnames(target.sigs) <- c("SBS4", "FFPE")
 
 ## Example
 
+```{r eval = FALSE}
+library(excerno)
 
+# Load in signatures
+cosmic.sigs <- get_known_signatures()
+cosmic.sig4 <- as.matrix(cosmic.sigs[,4])
+ffpe.sig <- get_ffpe_signature()
 
+# Load in vcf files
+vcf.files <- list.files(system.file("extdata", package = "excerno"), pattern = "SIMULATED_SAMPLE_SBS4_\\d.vcf", full.names = TRUE)
+vcf.file <- "SIMULATED_SAMPLE_SBS4_1_classified.vcf"
 
+method <- "nmf"
+num.signatures <- 2
+target.sigs <- matrix(nrow = 96, ncol = 2)
+target.sigs[,1] <- cosmic.sig4
+target.sigs[,2] <- ffpe.sig
+rownames(target.sigs) <- get_mutation_types()
+colnames(target.sigs) <- c("SBS4", "FFPE")
 
+excerno_vcf(vcf.files, "linear", target.sigs = target.sigs)
+```
+
+# Other Functions Not Mentioned
+
+## signature_cosine_similarity
+
+Determines how similar a mutational vector sample is to a mutational signature.
+
+```{r eval = FALSE}
+# Simulate sample
+cosmic.sig4 <- as.matrix(get_known_signatures()[,4])
+sample.sig4 <- create_signature_sample_vector(cosmic.sig4)
+
+signature_cosine_similarity(sample.sig4, cosmic.sig4)
+```
+
+## extract_all_prob
+
+Outputs two probabilities for one type of the 96 mutations given two signatures and the contribution of each signature.
+
+```{r eval = FALSE}
+cosmic.sigs <- get_known_signatures()
+
+# Get signatures
+signatures <- matrix(nrow = 96, ncol = 2)
+signatures[,1] <- cosmic.sigs[,4]
+signatures[,2] <- get_ffpe_signature()
+
+# Get contributions
+contribution <- matrix(nrow = 2, ncol = 1)
+contribution[,1] <- c(0.5, 0.5)
+
+# Naming columns and rows
+colnames(signatures) <- c("SBS4", "FFPE")
+rownames(signatures) <- get_mutation_types()
+
+rownames(contribution) <- c("SBS4", "FFPE")
+
+mutation <- "A[C>T]A"
+extract_all_prob(mutation, signatures, contribution)
+```
+
+## find_signature_name
+
+Given a signature matrix, search the COSMIC database for the most similar signature and output the name of that signature.
+
+```{r eval = FALSE}
+cosmic.sigs <- get_known_signatures()
+cosmic.sig4 <- as.matrix(cosmic.sigs[,4])
+
+find_signature_name(cosmic.sig4)
+```
+
+## get_mutational_vector
+
+Given a VCF file, create a vector of mutations in string form.
+
+```{r eval = FALSE}
+# Load file for testing
+file <- system.file("extdata", "SIMULATED_SAMPLE_SBS4_1.vcf", package = "excerno")
+
+vcf.vector <- get_mutational_vector(file)
+```
 
