@@ -98,9 +98,11 @@ vcf.files <- list.files(system.file("extdata", package = "excerno"), pattern = "
 
 ### Artifact
 
-To use ```excerno_vcf``` an artifact signature must be inputed. The artifact must be a 
+To use ```excerno_vcf``` an artifact signature must be inputted.
 
 ### Method
+
+```excerno_vcf``` offers two methods for calculating the contribution of signatures in a sample.
 
 ### Number of Signatures
 
