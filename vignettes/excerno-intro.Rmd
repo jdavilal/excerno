@@ -14,6 +14,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
+options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
 ```{r setup}
@@ -27,44 +29,51 @@ Formalin-Fixation Paraffin-Embedding (FFPE) is a preservation technique for canc
 ```excerno``` provide functions to help classify single nucleotide variants to their possible origin signature.
 
 # Simulations
+
 We tested the performance of our method by simulating mutations to match particular distributions and running a modified version of our classifier function that allows for the comparison of the true source of simulated mutations and the source predicted by our method. Functions for simulating mutations and classifying simulated mutations are included in the package.
 
 ## Creating simulated samples
 
 Load the mutational signatures from COSMIC version 3 using MutationalPatterns.
+
 ```{r eval = FALSE}
 library(MutationalPatterns)
 cosmic.sigs <- get_known_signatures()
 ```
 
-Extract COSMIC Signature 4 from the matrix of all COSMIC mutations. Create a vector of the 96 single base substitution mutation types using get_mutation_types and assign to the rownames of the Signature 4 matrix for compatibility with MutationalPatterns plotting functions. Use plot_96_profile from MutationalPatterns to visualize the distribution of Signature 4.
-```{r}
+Extract COSMIC Signature 4 from the matrix of all COSMIC mutations. Create a vector of the 96 single base substitution mutation types using ````get_mutation_types``` and assign to the rownames of the Signature 4 matrix for compatibility with MutationalPatterns plotting functions. Use ```plot_96_profile``` from MutationalPatterns to visualize the distribution of Signature 4.
+
+```{r eval = FALSE}
 cosmic.sig4 <- as.matrix(cosmic.sigs[,4])
 mutations <- get_mutation_types()
 rownames(cosmic.sig4) <- mutations
 plot_96_profile(cosmic.sig4)
 ```
 
-Load the FFPE Signature using get_ffpe_signature.
+Load the FFPE Signature using ```get_ffpe_signature```.
+
 ```{r eval = FALSE}
 ffpe.sig <- get_ffpe_signature()
 ```
 
-Create vectors of 100 mutations matching the distributions of COSMIC Signature 4 and the FFPE Signature using create_signature_sample_vector.
-```{r}
+Create vectors of 100 mutations matching the distributions of COSMIC Signature 4 and the FFPE Signature using ```create_signature_sample_vector```.
+
+```{r eval = FALSE}
 sample.sig4 <- create_signature_sample_vector(cosmic.sig4, 100)
 sample.ffpe <- create_signature_sample_vector(ffpe.sig, 100)
 ```
 
-Use signature_cosine_similarity to calculate the cosine similarity between the simulated vectors above and the original signatures.
-```{r}
+Use ```signature_cosine_similarity``` to calculate the cosine similarity between the simulated vectors above and the original signatures.
+
+```{r eval = FALSE}
 signature_cosine_similarity(sample.sig4, cosmic.sig4)
 signature_cosine_similarity(sample.ffpe, ffpe.sig)
 ```
 
 ## Creating a classification data frame with simulated samples
 
-Combine the Signature 4 and FFPE sample vectors and run the Bayesian classifyer on the combined sample using classify_simulated_samples.
+Combine the Signature 4 and FFPE sample vectors and run the Bayesian classifier on the combined sample using ```classify_simulated_samples```.
+
 ```{r eval = FALSE}
 # Turn into a list for input into classify_simulated_samples()
 samples <- list(sample.sig4, sample.ffpe)
@@ -75,6 +84,10 @@ classification.df
 ```
 
 ## Converting a simulated classification data frame to a GRange Object
+
+The function ```create_gr_from_sample``` converts a classification data frame into a GRange Object. The classification data frame must have a mutations column and a truth column. The mutations column contains strings of mutations such as "A[C>T]A". The truth column indicates what mutational signature the mutation came from.
+
+The output GRange object is meant to parallel a VCF file so additional columns are created in the GRange object: info, quality, filter, format, and samples (if provided values). These parameters are optional and will remain as NA if no values are provided. 
 
 ```{r eval = FALSE}
 classification.gr <- create_gr_from_sample(classification.df, seq, "chr1")
@@ -91,6 +104,8 @@ classification.gr <- data.frame(create_gr_from_sample(classify.df, seq, "chr1", 
 ```
 
 ## Writing a classification data frame to a VCF file
+
+The function ```write_grange_to_vcf``` takes in a GRange object and outputs a VCF file with the values from the GRange object.
 
 ```{r eval = FALSE}
 vcf.filename <- "new_vcf.file"
