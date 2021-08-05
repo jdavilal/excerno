@@ -9,7 +9,6 @@ ffpe.sig <- get_ffpe_signature()
 vcf.files <- list.files(system.file("extdata", package = "excerno"), pattern = "SIMULATED_SAMPLE_SBS4_\\d.vcf", full.names = TRUE)
 vcf.file <- "SIMULATED_SAMPLE_SBS4_1_classified.vcf"
 
-artifact <- "FFPE"
 method <- "nmf"
 num.signatures <- 2
 target.sigs <- matrix(nrow = 96, ncol = 2)
@@ -19,11 +18,10 @@ rownames(target.sigs) <- get_mutation_types()
 colnames(target.sigs) <- c("SBS4", "FFPE")
 
 test_that("Arguments are valid", {
-  expect_error(excerno_vcf(c(1, 2, 3, 4), artifact, method), "argument files must be type character")
-  expect_error(excerno_vcf(vcf.files, c(1, 2), method), "argument artifact must be type character")
-  expect_error(excerno_vcf(vcf.files, artifact, "hello"), "argument method must be \"nmf\" or \"linear\"")
-  expect_error(excerno_vcf(vcf.files, artifact, "linear"), "argument target.sigs must be non-empty if method equals linear")
-  expect_error(excerno_vcf(vcf.file, artifact, "nmf"), "argument files must be length greater than 2 if method equals nm")
+  expect_error(excerno_vcf(c(1, 2, 3, 4), method), "argument files must be type character")
+  expect_error(excerno_vcf(vcf.files, "hello"), "argument method must be \"nmf\" or \"linear\"")
+  expect_error(excerno_vcf(vcf.files, "linear"), "argument target.sigs must be non-empty if method equals linear")
+  expect_error(excerno_vcf(vcf.file, "nmf"), "argument files must be length greater than 2 if method equals nm")
 
 })
 
@@ -31,7 +29,7 @@ test_that("Arguments are valid", {
 test_that("VCF files are correct", {
 
   # Testing nmf method
-  excerno_vcf(vcf.files, artifact, "nmf")
+  excerno_vcf(vcf.files, "nmf")
 
   vcf.data <- read.vcfR(vcf.file)
 
@@ -47,7 +45,7 @@ test_that("VCF files are correct", {
   expect_equal(vcf.data@gt[, "SAMPLE2"][[1]], "0/0:57")
 
   # Testing nmf method
-  excerno_vcf(vcf.files, artifact, "linear", target.sigs = target.sigs)
+  excerno_vcf(vcf.files, "linear", target.sigs = target.sigs)
 
   vcf.data <- read.vcfR(vcf.file)
 

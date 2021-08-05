@@ -30,7 +30,8 @@
 #' contributions <- matrix(nrow = 2, ncol = 4)
 #' contributions[,] <- sample(0.5, 4, replace = TRUE)
 #' get_classifications(signatures, contributions)
-#'@export
+#'
+
 get_classification <- function(signatures, contribution) {
 
   # Argument validations for signatures

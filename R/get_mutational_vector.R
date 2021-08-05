@@ -32,7 +32,7 @@ get_mutational_vector <- function(vcf.file) {
   # Argument validation
   if (!is.character(vcf.file)) { stop("argument vcf.file is not type character") }
 
-  vcf.data <- read.vcfR(vcf.file)
+  suppressWarnings(invisible(capture.output(vcf.data <- read.vcfR(vcf.file))))
 
   # Convert to data frames
   vcf.fix <- data.frame(vcf.data@fix)
