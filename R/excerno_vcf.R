@@ -3,7 +3,6 @@
 #' excerno_vcf() produces filtered vcf files. It uses NMF or nonnegative linear combination of mutation signatures to determine contribution of signatures in samples. Then Bayes' Theroem is used to classify each variant.
 #'
 #' @param files VCF files
-#' @param artifact The signature to consider as an artifact
 #' @param method A string. The method used to determine the signatures (if not given) and calculate the contributions of each signature
 #' @param num.signatures Number of signatures. Necessary arugment for when method "linear" is choosen.
 #' @param target.sig Matrix of the target signatures.Necessary arugment for when method "linear" is choosen.
@@ -14,13 +13,25 @@
 #' # Load in files
 #' files <- list.files( system.file("extdata", package = "excerno"), pattern = "simulated_sample_sig4..", full.names = TRUE)
 #'
+#' # Using nmf
 #' exerno_vcf(files)
+#' excerno_vcf(files, num.signatures = 3)
+#'
+#' # Using linear method
+#'
+#' target.sigs <- matrix(nrow = 96, ncol = 2)
+#' target.sigs[,1] <- cosmic.sig4
+#' target.sigs[,2] <- ffpe.sig
+#' rownames(target.sigs) <- get_mutation_types()
+#' colnames(target.sigs) <- c("SBS4", "FFPE")
+#'
+#' excerno_vcf(files, "linear", 2, target.sigs)
+#'
 #' @export
-excerno_vcf <- function(files, artifact = c(), method = "nmf", num.signatures = 2, target.sigs = c()) {
+excerno_vcf <- function(files, method = "nmf", num.signatures = 2, target.sigs = c()) {
 
   # Arguments validation
   if (!is.character(files)) { stop("argument files must be type character") }
-  if (!is.character(artifact)) { stop("argument artifact must be type character") }
   if (method != "nmf" && method != "linear") { stop("argument method must be \"nmf\" or \"linear\"") }
   if (method == "linear" && is.null(target.sigs)) { stop("argument target.sigs must be non-empty if method equals linear") }
   if (method == "nmf" && length(files) < 2) { stop("argument files must be length greater than 2 if method equals nmf") }
@@ -35,7 +46,7 @@ excerno_vcf <- function(files, artifact = c(), method = "nmf", num.signatures = 
   }
 
   print_info("Creating mutational vectors")
-  samples <- get_mutational_vectors(vcf.files)
+  samples <- get_mutational_vectors(files)
 
   # Perform method to get present signatures and contributions of each sample
   if (method == "nmf") {
@@ -117,56 +128,14 @@ excerno_vcf <- function(files, artifact = c(), method = "nmf", num.signatures = 
 
   print_info("Loading in values to vcf files")
   # Insert probabilities into original vcfR object
-  # samples[[1]][1]formatC(x, digits = 8, format = "f")
   for (i in 1:num.samples) {
-
-    # Adding info meta data
-    prob.info <- paste("##INFO=<ID=PROB,Number=", toString(length(sig.names)), ",Type=Integer,Description=\"Posteriors for each signature (", sep = "")
-
-    for (sign in sig.names) {
-      prob.info <- paste(prob.info, sign, ",", sep = "")
-    }
-
-    prob.info <- str_remove(prob.info, ",$")
-    prob.info <- paste(prob.info, ")\">", sep = "")
-    vcf.data[[i]]@meta <- c(vcf.data[[i]]@meta, prob.info)
-
-    for (mut in 1:length(samples[[i]])) {
-
-      # Get probabilities for a mutation type
-      mut.row <- classifications.df[[i]] %>%
-        filter(mutations == samples[[i]][mut])
-
-      # Generate a string with probabilites
-      prob.str <- ""
-
-      for (sign in sig.names) {
-         prob.str <- paste(prob.str, formatC(mut.row[[sign]], digits = 2, format = "f"), ",", sep = "")
-      }
-
-      prob.str <- str_remove(prob.str, ",$")
-
-      # Insert prob.str to data frame
-      vcf.data[[i]]@fix[,"INFO"][mut] <- paste(vcf.data[[i]]@fix[,"INFO"][mut], ";PROB=", prob.str, sep = "")
-
-      # Insert pass filter to variants with higher than 0.5 probability for artifacts
-      if (!is.null(artifact)) {
-        if (mut.row[[artifact]] < 0.5) {
-          vcf.data[[i]]@fix[,"FILTER"][mut] <- "PASS"
-        }
-      }
-    }
-
-    # Writing vcf file with new info
-    vcf.file <- paste(str_remove(tail(str_split(files[i], "/")[[1]], n = 1), ".vcf$"), "_classified.vcf.gz", sep = "")
-    write.vcf(vcf.data[[i]], vcf.file)
-    gunzip(vcf.file, overwrite = TRUE)
+    write_classification_to_vcf(files[[i]], classifications.df[[i]])
   }
 
-  # Create list for outputting results
-  output <- list()
-  output$vcf.data <- vcf.data
-  output$class.df <- classifications.df
-
-  return (output)
+  # # Create list for outputting results
+  # output <- list()
+  # output$vcf.data <- vcf.data
+  # output$class.df <- classifications.df
+  #
+  # return (output)
 }

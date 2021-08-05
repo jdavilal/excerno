@@ -4,18 +4,10 @@
 \alias{excerno_vcf}
 \title{Exercerno VCF}
 \usage{
-excerno_vcf(
-  files,
-  artifact = c(),
-  method = "nmf",
-  num.signatures = 2,
-  target.sigs = c()
-)
+excerno_vcf(files, method = "nmf", num.signatures = 2, target.sigs = c())
 }
 \arguments{
 \item{files}{VCF files}
-
-\item{artifact}{The signature to consider as an artifact}
 
 \item{method}{A string. The method used to determine the signatures (if not given) and calculate the contributions of each signature}
 
@@ -34,5 +26,18 @@ excerno_vcf() produces filtered vcf files. It uses NMF or nonnegative linear com
 # Load in files
 files <- list.files( system.file("extdata", package = "excerno"), pattern = "simulated_sample_sig4..", full.names = TRUE)
 
+# Using nmf
 exerno_vcf(files)
+excerno_vcf(files, num.signatures = 3)
+
+# Using linear method
+
+target.sigs <- matrix(nrow = 96, ncol = 2)
+target.sigs[,1] <- cosmic.sig4
+target.sigs[,2] <- ffpe.sig
+rownames(target.sigs) <- get_mutation_types()
+colnames(target.sigs) <- c("SBS4", "FFPE")
+
+excerno_vcf(files, "linear", 2, target.sigs)
+
 }
