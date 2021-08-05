@@ -6,6 +6,10 @@
 #'
 #' @return A vector of type character
 #' @examples
+#'
+#' library(MutationalPatterns)
+#' library(tidyverse)
+#'
 #' # Load signature from COSMIC
 #' cosmic.sigs <- get_known_signatures()
 #' cosmic.sig4 <- as.matrix(cosmic.sigs[,4])

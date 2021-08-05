@@ -21,6 +21,9 @@ extract_all_prob() implements bayes' thereom to get the probabilites of a mutati
 }
 \examples{
 
+library(MutationalPatterns)
+library(tidyverse)
+
 cosmic.sigs <- get_known_signatures()
 
 # Get signatures

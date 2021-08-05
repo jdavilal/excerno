@@ -10,11 +10,23 @@
 #' @return Object containing the vcf objects and classification data frame
 #' @examples
 #'
+#' library(MutationalPatterns)
+#' library(tidyverse)
+#' library(vcfR)
+#' library(Biostrings)
+#' library(BSgenome.Hsapiens.UCSC.hg38)
+#' library(R.utils)
+#'
+#' # Load in correct signatures
+#' cosmic.sigs <- get_known_signatures()
+#' cosmic.sig4 <- as.matrix(cosmic.sigs[, 4])
+#' ffpe.sig <- get_ffpe_signature()
+#'
 #' # Load in files
-#' files <- list.files( system.file("extdata", package = "excerno"), pattern = "simulated_sample_sig4..", full.names = TRUE)
+#' files <- list.files( system.file("extdata", package = "excerno"), pattern = "SIMULATED_SAMPLE_SBS4_\\d.vcf", full.names = TRUE)
 #'
 #' # Using nmf
-#' exerno_vcf(files)
+#' excerno_vcf(files)
 #' excerno_vcf(files, num.signatures = 3)
 #'
 #' # Using linear method

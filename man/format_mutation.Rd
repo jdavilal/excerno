@@ -21,6 +21,10 @@ Determine the string format of a position in a genomic sequence
 }
 \examples{
 
+library(Biostrings)
+library(BSgenome.Hsapiens.UCSC.hg38)
+ library(stringr)
+
 # Load in the sequence
 seq <- getSeq(Hsapiens, "chr1")
 format_mutation(20124, seq, "A")

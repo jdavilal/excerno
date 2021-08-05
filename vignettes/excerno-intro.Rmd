@@ -241,7 +241,7 @@ Code for generating the samples included with this package.
 
 ## SAMPLE 1: FFPE at 50% with 1000 mutations
 
-```{r}
+```{r eval = FALSE}
 set.seed(10)
 sample.ffpe <- create_signature_sample_vector(ffpe.sig, 500)
 sample.sig4 <- create_signature_sample_vector(cosmic.sig4, 500)
@@ -264,7 +264,7 @@ write_grange_to_vcf(classify.gr, file.name)
 
 ## SAMPLE 2: FFPE at 80% with 1000 mutations
 
-```{r}
+```{r eval = FALSE}
 set.seed(20)
 sample.ffpe <- create_signature_sample_vector(ffpe.sig, 800)
 sample.sig4 <- create_signature_sample_vector(cosmic.sig4, 200)
@@ -287,7 +287,7 @@ write_grange_to_vcf(classify.gr, file.name)
 
 ## SAMPLE 3: FFPE at 40% with 1000 mutations
 
-```{r}
+```{r eval = FALSE}
 set.seed(30)
 sample.ffpe <- create_signature_sample_vector(ffpe.sig, 400)
 sample.sig4 <- create_signature_sample_vector(cosmic.sig4, 600)
@@ -310,7 +310,7 @@ write_grange_to_vcf(classify.gr, file.name)
 
 ## SAMPLE 4: FFPE at 10% with 1000 mutations
 
-```{r}
+```{r eval = FALSE}
 set.seed(40)
 sample.ffpe <- create_signature_sample_vector(ffpe.sig, 100)
 sample.sig4 <- create_signature_sample_vector(cosmic.sig4, 900)

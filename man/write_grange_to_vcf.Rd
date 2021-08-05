@@ -16,6 +16,12 @@ Write a GRange to a vcf file
 }
 \examples{
 
+library(MutationalPatterns)
+library(tidyverse)
+library(Biostrings)
+library(BSgenome.Hsapiens.UCSC.hg38)
+library(vcfR)
+
 set.seed(10)
 
 # Load in signatures

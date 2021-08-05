@@ -6,6 +6,12 @@
 #' @return A vector of mutation strings
 #' @examples
 #'
+#' library(MutationalPatterns)
+#' library(tidyverse)
+#' library(vcfR)
+#' library(Biostrings)
+#' library(BSgenome.Hsapiens.UCSC.hg38)
+#'
 #' # Load file for testing
 #' file <- system.file("extdata", "SIMULATED_SAMPLE_SBS4_1.vcf", package = "excerno")
 #'

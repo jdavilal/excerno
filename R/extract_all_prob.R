@@ -8,6 +8,9 @@
 #' @return A vector of the posteriors
 #' @examples
 #'
+#' library(MutationalPatterns)
+#' library(tidyverse)
+#'
 #'cosmic.sigs <- get_known_signatures()
 #'
 #' # Get signatures

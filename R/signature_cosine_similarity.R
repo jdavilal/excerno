@@ -8,6 +8,9 @@
 #'
 #' @examples
 #'
+#' library(MutationalPatterns)
+#' library(tidyverse)
+#'
 #' cosmic.sig4 <- as.matrix(get_known_signatures()[,4])
 #' sample.sig4 <- create_signature_sample_vector(cosmic.sig4)
 #' signature_cosine_similarity(sample.sig4, cosmic.sig4)

@@ -24,11 +24,13 @@ Imports:
     MutationalPatterns,
     stringr,
     bedr,
-    ROCR,
     NMF,
     BSgenome.Hsapiens.UCSC.hg38,
     vcfR,
-    R.utils
+    R.utils,
+    tidyverse,
+    Biostrings,
+    GenomicRanges
 RoxygenNote: 7.1.1
 Suggests: 
     rmarkdown,

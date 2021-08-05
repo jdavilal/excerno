@@ -4,6 +4,12 @@
 #' @param file.name A string of the new file name. Make sure to end string with ".vcf"
 #' @examples
 #'
+#' library(MutationalPatterns)
+#' library(tidyverse)
+#' library(Biostrings)
+#' library(BSgenome.Hsapiens.UCSC.hg38)
+#' library(vcfR)
+#'
 #' set.seed(10)
 #'
 #' # Load in signatures

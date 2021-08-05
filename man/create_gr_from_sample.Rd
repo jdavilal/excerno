@@ -43,6 +43,12 @@ Generate a GRange object from sample data frame with additional columns for a vc
 }
 \examples{
 
+library(MutationalPatterns)
+library(tidyverse)
+library(Biostrings)
+library(BSgenome.Hsapiens.UCSC.hg38)
+library(GenomicRanges)
+
 # Load in signatures
 cosmic.sigs <- get_known_signatures()
 cosmic.sig4 <- as.matrix(cosmic.sigs[,4])
@@ -60,5 +66,13 @@ classify.df <- classify_simulated_samples(samples, signatures)
 seq <- getSeq(Hsapiens, "chr1")
 
 create_gr_from_sample(classify.df, seq, "chr1")
+
+# Adding values to other columns
+info <- sample("SOMATIC", 200, replace = TRUE)
+quality <- sample(50:100, 200, replace = TRUE)
+filter <- sample("PASS", 200, replace = TRUE)
+format <- sample("GT:GQ", 200, replace = TRUE)
+samples <- list(sample(paste("0/0:", 1:100, sep = ""), 200, replace = TRUE), sample(paste("0/0:", 1:100, sep = ""), 200, replace = TRUE))
+sample.names <- c("SAMPLE1", "SAMPLE2")
 create_gr_from_sample(classify.df, seq, "chr1", info, quality, filter, format, samples, sample.names)
 }

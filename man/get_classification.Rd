@@ -22,6 +22,9 @@ Determine probability of where each mutation came from using Bayes' Thereom.
 }
 \examples{
 
+library(MutationalPatterns)
+library(tidyverse)
+
 # Load in signatures
 cosmic.sigs <- get_known_signatures()
 
@@ -36,6 +39,7 @@ rownames(signatures) <- get_mutation_types()
 contribution <- matrix(nrow = 2, ncol = 1)
 contribution[,1] <- c(0.5, 0.5)
 rownames(contribution) <- c("SBS4", "FFPE")
+colnames(contribution) <- "SAMPLE1"
 
 # Function usage
 get_classification(signatures, contribution)
@@ -43,6 +47,7 @@ get_classification(signatures, contribution)
 # For more than one sample
 contributions <- matrix(nrow = 2, ncol = 4)
 contributions[,] <- sample(0.5, 4, replace = TRUE)
+colnames(contributions) <- c("SAMPLE1", "SAMPLE2", "SAMPLE3", "SAMPLE4")
+rownames(contributions) <- c("SBS4", "FFPE")
 get_classifications(signatures, contributions)
-
 }

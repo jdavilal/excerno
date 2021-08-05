@@ -18,6 +18,10 @@ A vector of type character
 Simulate sample to match signature distribution (vector of all mutations)
 }
 \examples{
+
+library(MutationalPatterns)
+library(tidyverse)
+
 # Load signature from COSMIC
 cosmic.sigs <- get_known_signatures()
 cosmic.sig4 <- as.matrix(cosmic.sigs[,4])

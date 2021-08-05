@@ -8,6 +8,9 @@
 #' @return A data frame with the classification of each mutation in the samples
 #' @examples
 #'
+#' library(MutationalPatterns)
+#' library(tidyverse)
+#'
 #' # Load in signatures
 #' cosmic.sigs <- get_known_signatures()
 #' cosmic.sig4 <- as.matrix(cosmic.sigs[,4])
@@ -22,6 +25,7 @@
 #'
 #' classify_simulated_samples(samples, signatures)
 #' classify_simulated_samples(samples, signatures, c("SBS4", "FFPE"))
+#' @import MutationalPatterns
 #' @export
 classify_simulated_samples <- function(samples, signatures, signature.names = c()) {
 

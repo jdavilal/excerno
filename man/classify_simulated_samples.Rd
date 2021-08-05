@@ -21,6 +21,9 @@ Get classification of each mutation using Bayes' Theorem.
 }
 \examples{
 
+library(MutationalPatterns)
+library(tidyverse)
+
 # Load in signatures
 cosmic.sigs <- get_known_signatures()
 cosmic.sig4 <- as.matrix(cosmic.sigs[,4])

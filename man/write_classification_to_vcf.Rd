@@ -16,6 +16,13 @@ Add probabilities from classification data frame to a VCF file
 }
 \examples{
 
+library(MutationalPatterns)
+library(tidyverse)
+library(vcfR)
+library(R.utils)
+library(Biostrings)
+library(BSgenome.Hsapiens.UCSC.hg38)
+
 vcf.file <- system.file("extdata", "SIMULATED_SAMPLE_SBS4_1.vcf", package = "excerno")
 
 # Load in signatures
@@ -33,8 +40,7 @@ contribution <- matrix(nrow = 2, ncol = 1)
 contribution[,1] <- c(0.5, 0.5)
 rownames(contribution) <- c("SBS4", "FFPE")
 
-write_classification_to_vcf(vcf.file, classification.df)
-
 classification.df <- get_classification(signatures, contribution)
+write_classification_to_vcf(vcf.file, classification.df)
 
 }

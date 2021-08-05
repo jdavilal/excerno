@@ -5,8 +5,11 @@
 #' @return A string of the most similar signature
 #' @examples
 #'
+#' library(MutationalPatterns)
+#' library(tidyverse)
+#'
 #' # Load in a signature
-#' cosmic.sigs <- get_known_signature()
+#' cosmic.sigs <- get_known_signatures()
 #' signature.4 <- as.matrix(cosmic.sigs[,4])
 #' rownames(signature.4) <- get_mutation_types()
 #'
