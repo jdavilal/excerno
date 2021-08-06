@@ -235,6 +235,32 @@ file <- system.file("extdata", "SIMULATED_SAMPLE_SBS4_1.vcf", package = "excerno
 vcf.vector <- get_mutational_vector(file)
 ```
 
+## write_classification_to_vcf
+
+Add the classifcation information from a classification data frame to its orginal vcf file. Takes in the orginal VCF file and a data frame with the classifications.
+
+```{r eval = FALSE}
+vcf.file <- system.file("extdata", "SIMULATED_SAMPLE_SBS4_1.vcf", package = "excerno")
+
+# Load in signatures
+cosmic.sigs <- get_known_signatures()
+
+# Get signatures
+signatures <- matrix(nrow = 96, ncol = 2)
+signatures[,1] <- cosmic.sigs[,4]
+signatures[,2] <- get_ffpe_signature()
+rownames(signatures) <- get_mutation_types()
+colnames(signatures) <- c("SBS4", "FFPE")
+
+# Get contributions
+contribution <- matrix(nrow = 2, ncol = 1)
+contribution[,1] <- c(0.5, 0.5)
+rownames(contribution) <- c("SBS4", "FFPE")
+
+classification.df <- get_classification(signatures, contribution)
+write_classification_to_vcf(vcf.file, classification.df)
+```
+
 # Data
 
 Code for generating the samples included with this package.
