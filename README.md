@@ -1,3 +1,21 @@
+# Introduction
+
+This package is used as a classifier for determining the origin of a mutation, specifically
+for samples that have been preserved using formalin-fixation paraffin-embedding (FFPE).
+This preservation process introduces artificial FFPE-caused mutations. The new variants
+(mostly C to T type mutations) transform the origin mutation profile, creating difficulty
+in detecting the original mutation signature. Excerno quantifies the abundance of the 
+FFPE mutational signature and uses Bayes’ formula to filter FFPE artifacts.
+
+Excerno also includes the ability to simulate cancer samples by randomly generating
+mutations that corresponds to the FFPE mutational signature and a mutational signature
+from the Catalogue Of Somatic Mutations In Cancer.
+
+__Additional data:__
+
+* Simulated cancer samples
+* The FFPE signature
+
 # Installation Guide
 
 ## Dependencies
@@ -22,3 +40,12 @@ Make sure you have all of these packages installed already:
 install.packages("devtools")
 devtools::install_github("jdavilal/excerno", dependencies = TRUE)
 ```
+
+# Resources
+
+* Instructions on how to use the app can be found in the vignette. ```browseVignettes("excerno")```
+* Our interactive shiny app is [here](https://mitche7.shinyapps.io/excerno/)
+
+# Overview of package workflow
+
+![Workflow image](https://github.com/jdavilal/excerno/blob/master/inst/img/method.png)
