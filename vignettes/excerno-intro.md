@@ -1,7 +1,7 @@
 ---
 title: "Introduction to Excerno"
 author: "Audrey Mitchell, Marco Ruiz, Soua Yang"
-date: "`r Sys.Date()`"
+date: "2022-08-11"
 output:
   rmarkdown::html_vignette:
   keep_md: true
@@ -11,16 +11,10 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 --- 
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
 
-options(rmarkdown.html_vignette.check_title = FALSE)
-```
 
-```{r setup}
+
+```r
 # library(excerno)
 ```
 
@@ -38,14 +32,16 @@ We tested the performance of our method by simulating mutations to match particu
 
 Load the mutational signatures from COSMIC version 3 using MutationalPatterns.
 
-```{r eval = FALSE}
+
+```r
 library(MutationalPatterns)
 cosmic.sigs <- get_known_signatures()
 ```
 
 Extract COSMIC Signature 4 from the matrix of all COSMIC mutations. Create a vector of the 96 single base substitution mutation types using ````get_mutation_types``` and assign to the rownames of the Signature 4 matrix for compatibility with MutationalPatterns plotting functions. Use ```plot_96_profile``` from MutationalPatterns to visualize the distribution of Signature 4.
 
-```{r eval = FALSE}
+
+```r
 cosmic.sig4 <- as.matrix(cosmic.sigs[,4])
 mutations <- get_mutation_types()
 rownames(cosmic.sig4) <- mutations
@@ -54,20 +50,23 @@ plot_96_profile(cosmic.sig4)
 
 Load the FFPE Signature using ```get_ffpe_signature```.
 
-```{r eval = FALSE}
+
+```r
 ffpe.sig <- get_ffpe_signature()
 ```
 
 Create vectors of 100 mutations matching the distributions of COSMIC Signature 4 and the FFPE Signature using ```create_signature_sample_vector```.
 
-```{r eval = FALSE}
+
+```r
 sample.sig4 <- create_signature_sample_vector(cosmic.sig4, 100)
 sample.ffpe <- create_signature_sample_vector(ffpe.sig, 100)
 ```
 
 Use ```signature_cosine_similarity``` to calculate the cosine similarity between the simulated vectors above and the original signatures.
 
-```{r eval = FALSE}
+
+```r
 signature_cosine_similarity(sample.sig4, cosmic.sig4)
 signature_cosine_similarity(sample.ffpe, ffpe.sig)
 ```
@@ -76,7 +75,8 @@ signature_cosine_similarity(sample.ffpe, ffpe.sig)
 
 Combine the Signature 4 and FFPE sample vectors and run the Bayesian classifier on the combined sample using ```classify_simulated_samples```.
 
-```{r eval = FALSE}
+
+```r
 # Turn into a list for input into classify_simulated_samples()
 samples <- list(sample.sig4, sample.ffpe)
 signatures <- list(cosmic.sig4, ffpe.sig)
@@ -91,7 +91,8 @@ The function ```create_gr_from_sample``` converts a classification data frame in
 
 The output GRange object is meant to parallel a VCF file so additional columns are created in the GRange object: info, quality, filter, format, and samples (if provided values). These parameters are optional and will remain as NA if no values are provided. 
 
-```{r eval = FALSE}
+
+```r
 seq <- getSeq(Hsapiens, "chr1")
 classification.gr <- create_gr_from_sample(classification.df, seq, "chr1")
 
@@ -110,7 +111,8 @@ classification.gr <- create_gr_from_sample(classification.df, seq, "chr1", info,
 
 The function ```write_grange_to_vcf``` takes in a GRange object and outputs a VCF file with the values from the GRange object.
 
-```{r eval = FALSE}
+
+```r
 vcf.filename <- "new_vcf.file"
 
 write_grange_to_vcf(classification.gr, vcf.filename)
@@ -126,7 +128,8 @@ write_grange_to_vcf(classification.gr, vcf.filename)
 
 ```excerno_vcf``` takes VCF files as its main input source. Here is an example of loading in VCF files (included in package).
 
-```{r eval = FALSE}
+
+```r
 vcf.files <- list.files(system.file("extdata", package = "excerno"), pattern = "SIMULATED_SAMPLE_SBS4_\\d.vcf", full.names = TRUE)
 ```
 
@@ -142,7 +145,8 @@ If using method NMF to calculate the contribution of the signatures present in a
 
 If using method NMF to calculate the contribution of the signatures present in a sample, the target signatures need to be provided as a matrix with mutation types for the row names and the signature name for the column names. Here's an example on creating a signature matrix for target.sig.
 
-```{r eval = FALSE}
+
+```r
 target.sigs <- matrix(nrow = 96, ncol = 2)
 target.sigs[,1] <- cosmic.sig4
 target.sigs[,2] <- ffpe.sig
@@ -152,7 +156,8 @@ colnames(target.sigs) <- c("SBS4", "FFPE")
 
 ## Example
 
-```{r eval = FALSE}
+
+```r
 library(excerno)
 
 # Load in signatures
@@ -181,7 +186,8 @@ excerno_vcf(vcf.files, "linear", target.sigs = target.sigs)
 
 Determines how similar a mutational vector sample is to a mutational signature.
 
-```{r eval = FALSE}
+
+```r
 # Simulate sample
 cosmic.sig4 <- as.matrix(get_known_signatures()[,4])
 sample.sig4 <- create_signature_sample_vector(cosmic.sig4)
@@ -193,7 +199,8 @@ signature_cosine_similarity(sample.sig4, cosmic.sig4)
 
 Outputs two probabilities for one type of the 96 mutations given two signatures and the contribution of each signature.
 
-```{r eval = FALSE}
+
+```r
 cosmic.sigs <- get_known_signatures()
 
 # Get signatures
@@ -219,7 +226,8 @@ extract_all_prob(mutation, signatures, contribution)
 
 Given a signature matrix, search the COSMIC database for the most similar signature and output the name of that signature.
 
-```{r eval = FALSE}
+
+```r
 cosmic.sigs <- get_known_signatures()
 cosmic.sig4 <- as.matrix(cosmic.sigs[,4])
 
@@ -230,7 +238,8 @@ find_signature_name(cosmic.sig4)
 
 Given a VCF file, create a vector of mutations in string form.
 
-```{r eval = FALSE}
+
+```r
 # Load file for testing
 file <- system.file("extdata", "SIMULATED_SAMPLE_SBS4_1.vcf", package = "excerno")
 
@@ -241,7 +250,8 @@ vcf.vector <- get_mutational_vector(file)
 
 Add the classifcation information from a classification data frame to its orginal vcf file. Takes in the orginal VCF file and a data frame with the classifications.
 
-```{r eval = FALSE}
+
+```r
 vcf.file <- system.file("extdata", "SIMULATED_SAMPLE_SBS4_1.vcf", package = "excerno")
 
 # Load in signatures
@@ -269,7 +279,8 @@ Code for generating the samples included with this package.
 
 ## SAMPLE 1: FFPE at 50% with 1000 mutations
 
-```{r eval = FALSE}
+
+```r
 set.seed(10)
 sample.ffpe <- create_signature_sample_vector(ffpe.sig, 500)
 sample.sig4 <- create_signature_sample_vector(cosmic.sig4, 500)
@@ -292,7 +303,8 @@ write_grange_to_vcf(classify.gr, file.name)
 
 ## SAMPLE 2: FFPE at 80% with 1000 mutations
 
-```{r eval = FALSE}
+
+```r
 set.seed(20)
 sample.ffpe <- create_signature_sample_vector(ffpe.sig, 800)
 sample.sig4 <- create_signature_sample_vector(cosmic.sig4, 200)
@@ -315,7 +327,8 @@ write_grange_to_vcf(classify.gr, file.name)
 
 ## SAMPLE 3: FFPE at 40% with 1000 mutations
 
-```{r eval = FALSE}
+
+```r
 set.seed(30)
 sample.ffpe <- create_signature_sample_vector(ffpe.sig, 400)
 sample.sig4 <- create_signature_sample_vector(cosmic.sig4, 600)
@@ -338,7 +351,8 @@ write_grange_to_vcf(classify.gr, file.name)
 
 ## SAMPLE 4: FFPE at 10% with 1000 mutations
 
-```{r eval = FALSE}
+
+```r
 set.seed(40)
 sample.ffpe <- create_signature_sample_vector(ffpe.sig, 100)
 sample.sig4 <- create_signature_sample_vector(cosmic.sig4, 900)
