@@ -38,12 +38,12 @@ Make sure you have all of these packages installed already:
 
 ```
 install.packages("devtools")
-devtools::install_github("jdavilal/excerno", dependencies = TRUE)
+devtools::install_github("jdavilal/excerno", dependencies = TRUE, build_vignettes = TRUE)
 ```
 
 # Resources
 
-* Instructions on how to use the app can be found in the vignette. ```browseVignettes("excerno")```
+* Instructions on how to use the library can be found in the [vignette](vignettes/excerno-intro.md). Also trough ```browseVignettes("excerno")```
 * Our interactive shiny app is [here](https://mitche7.shinyapps.io/excerno/)
 
 # Overview of package workflow
