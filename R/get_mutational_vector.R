@@ -33,50 +33,33 @@
 #'
 #' sample.vectors <- get_mutational_vectors(vcf.files)
 #' @export
-get_mutational_vector <- function(vcf.file) {
+get_mutational_vector <- function(vcf.file, ref_genome="BSgenome.Hsapiens.UCSC.hg38") {
 
   # Argument validation
   if (!is.character(vcf.file)) { stop("argument vcf.file is not type character") }
 
-  suppressWarnings(invisible(capture.output(vcf.data <- read.vcfR(vcf.file))))
 
-  # Convert to data frames
-  vcf.fix <- data.frame(vcf.data@fix)
-  vcf.fix$CHROM <- as.numeric(vcf.fix$CHROM)
-  vcf.fix$POS <- as.numeric(vcf.fix$POS)
-  vcf.gt <- data.frame(vcf.data@gt)
+  suppressWarnings(
+    invisible(
+      capture.output(
+        grl <-read_vcfs_as_granges(c(vcf.file),c(vcf.file),ref_genome,
+                                   type=c("snv"),
+                                   predefined_dbs_mbs =TRUE))))
 
-  mutations <- vector(mode = "character")
-  seq <- list()
-  mut_num <- length(vcf.fix[[1]])
-
-  # Iterate through the mutations
-  for (i in 1:mut_num) {
-    row <- vcf.fix[i, ]
-
-    # Loads in chromosome sequence if needed
-    if (row$CHROM > length(seq)) {
-      seq[[paste("CHR", toString(row$CHROM), sep = "")]] <- getSeq(Hsapiens, paste("chr", "1", sep = ""))
-    }
-
-    # Formatting
-    mutation <- format_mutation(row$POS, seq[[row$CHROM]], toString(row$ALT))
-    mutations <- c(mutations, mutation)
-  }
-
+  # Get the context of the mutations
+  type_context <- type_context(grl[[1]], ref_genome)
+  ctxt_vec <- as.character(type_context$context)
+  mut_vec <- type_context$types
+  # Create the string with the right format e.g. G[C>T]T
+  pre <- str_sub(ctxt_vec,1,1)
+  post <- str_sub(ctxt_vec,3,3)
+  mutations <- str_c(pre,"[",mut_vec,"]",post)
   return (mutations)
 }
 
+
 #' @rdname get_mutational_vector
 #' @export
-get_mutational_vectors <- function(vcf.files) {
-
-  sample.vectors <- list()
-
-  for (i in 1:length(vcf.files)) {
-    sample.vector <- get_mutational_vector(vcf.files[[i]])
-    sample.vectors[[i]] <- sample.vector
-  }
-
-  return (sample.vectors)
+get_mutational_vectors <- function(vcf.files, ref_genome="BSgenome.Hsapiens.UCSC.hg38") {
+    lapply(vcf.files, get_mutational_vector, ref_genome=ref_genome)
 }

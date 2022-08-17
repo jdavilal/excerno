@@ -33,7 +33,7 @@ test_that("VCF files are correct", {
 
   vcf.data <- read.vcfR(vcf.file)
 
-  expect_equal(vcf.data@fix[, "INFO"][[1]], "SOMATIC;TRUTH=FFPE;PROB=0.10,0.90")
+  expect_equal(vcf.data@fix[, "INFO"][[1]], "SOMATIC;TRUTH=FFPE;PROB=0.11,0.89")
   expect_equal(vcf.data@fix[, "POS"][[1]], "10522")
   expect_equal(vcf.data@fix[, "REF"][[1]], "C")
   expect_equal(vcf.data@fix[, "QUAL"][[1]], "53")
