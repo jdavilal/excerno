@@ -44,6 +44,7 @@ devtools::install_github("jdavilal/excerno", dependencies = TRUE, build_vignette
 # Resources
 
 * Instructions on how to use the library can be found in the [vignette](vignettes/excerno-intro.md). Also trough ```browseVignettes("excerno")```
+* The analysis done for our [paper](https://github.com/jdavilal/curi_2021/blob/main/paper_analysis.md)
 * Our interactive shiny app is [here](https://mitche7.shinyapps.io/excerno/)
 
 # Overview of package workflow
