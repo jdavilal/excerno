@@ -34,6 +34,15 @@ Make sure you have all of these packages installed already:
 * R.utils
 * tidyverse
 
+Notice that for installing some of the packages you need the BiocManager installed, for example
+
+```
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("BSgenome.Hsapiens.UCSC.hg38")
+```
+
 ## Installing the package
 
 ```
